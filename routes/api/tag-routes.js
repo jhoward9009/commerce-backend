@@ -7,7 +7,19 @@ router.get('/', (req, res) => {
   // find all tags
   // be sure to include its associated Product data
 
-  Tag.findAll({})
+  Tag.findAll({
+
+    attributes: [
+      'tag_name'
+    ],
+    include: [
+      {
+        model: Product,
+        attributes: ['price', 'id', 'product_name', 'stock' ],
+      }
+    ]
+
+  })
   .then(data => res.json(data))
   .catch(error => console.log(error));
 
@@ -17,7 +29,13 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   // find a single tag by its `id`
   // be sure to include its associated Product data
-  Tag.findOne({})
+  Tag.findOne({
+    where: {
+      id: req.params.id
+    },
+    attributes: ["tag_name"]
+
+  })
   .then(data => res.json(data))
   .catch(error => console.log(error));
 
@@ -27,6 +45,8 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
 
   Tag.create({
+    tag_name: req.body.tag_name
+
 
   })
   // create a new tag
@@ -39,6 +59,11 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   Tag.update({
+    
+      tag_name: req.body.tag_name
+    },
+    { 
+      where: {id: req.params.id}
 
   })
   // update a tag's name by its `id` value
